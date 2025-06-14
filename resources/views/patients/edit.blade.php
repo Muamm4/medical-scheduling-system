@@ -30,7 +30,7 @@
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <form action="{{ route('patients.update', $patient) }}" method="POST">
+                    <form action="{{ route('patients.update', $patient) }}" method="POST" id="form">
                         @csrf
                         @method('PUT')
                         
@@ -45,7 +45,7 @@
                                 
                                 <div>
                                     <label for="cpf" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CPF (apenas números)</label>
-                                    <input type="text" name="cpf" id="cpf" value="{{ old('cpf', $patient->cpf) }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" maxlength="11" required>
+                                    <input type="text" name="cpf" id="cpf" value="{{ old('cpf', $patient->cpf) }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm cpf" required>
                                 </div>
                                 
                                 <div>
@@ -119,7 +119,7 @@
                                         
                                         <div>
                                             <label for="responsible[{{ $index }}][cpf]" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CPF (apenas números)</label>
-                                            <input type="text" name="responsible[{{ $index }}][cpf]" id="responsible[{{ $index }}][cpf]" value="{{ old('responsible.' . $index . '.cpf', $responsible->cpf) }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" maxlength="11" required>
+                                            <input type="text" name="responsible[{{ $index }}][cpf]" id="responsible[{{ $index }}][cpf]" value="{{ old('responsible.' . $index . '.cpf', $responsible->cpf) }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm cpf" required>
                                         </div>
                                         
                                         <div>
@@ -144,6 +144,18 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            $(document).ready(function() {
+                $('.cpf').mask('000.000.000-00', {reverse: true});
+                $('.zip_code').mask('00000-000', {reverse: true});
+            });
+
+            document.getElementById('form').addEventListener('submit', function() {
+                $('.cpf').unmask();
+                $('.zip_code').unmask();
+            });
+
+            
             // Função para buscar endereço pelo CEP usando a API ViaCEP
             const zipCodeInput = document.getElementById('zip_code');
             

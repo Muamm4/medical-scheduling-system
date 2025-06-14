@@ -38,7 +38,7 @@
                             <div class="mb-4">
                                 <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">CPF</h4>
                                 <p class="text-base text-gray-900 dark:text-gray-100">
-                                    {{ substr_replace(substr_replace($patient->cpf, '.', 3, 0), '.', 7, 0) }}
+                                    {{ \App\Helpers\FormatHelper::formatCpf($patient->cpf) }}
                                 </p>
                             </div>
                             
@@ -77,7 +77,7 @@
                             <div class="mb-4">
                                 <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">CEP</h4>
                                 <p class="text-base text-gray-900 dark:text-gray-100">
-                                    {{ substr_replace($patient->zip_code, '-', 5, 0) }}
+                                    {{ \App\Helpers\FormatHelper::formatCep($patient->zip_code) }}
                                 </p>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
                                 <div class="mb-2">
                                     <span class="text-sm font-medium text-gray-500 dark:text-gray-400">CPF:</span>
                                     <span class="text-base text-gray-900 dark:text-gray-100 ml-2">
-                                        {{ substr_replace(substr_replace($responsible->cpf, '.', 3, 0), '.', 7, 0) }}
+                                        {{ \App\Helpers\FormatHelper::formatCpf($responsible->cpf) }}
                                     </span>
                                 </div>
                                 
@@ -123,7 +123,7 @@
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Agendamentos</h3>
                         
-                        <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                        <a href="{{ route('appointments.create', ['patient_id' => $patient->id]) }}" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
                             Novo Agendamento
                         </a>
                     </div>

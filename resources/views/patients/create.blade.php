@@ -27,7 +27,7 @@
 
             <div class="bg-white dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <form action="{{ route('patients.store') }}" method="POST">
+                    <form action="{{ route('patients.store') }}" method="POST" id="form">
                         @csrf
                         
                         <div class="mb-6">
@@ -41,7 +41,7 @@
                                 
                                 <div>
                                     <label for="cpf" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CPF (apenas números)</label>
-                                    <input type="text" name="cpf" id="cpf" value="{{ old('cpf') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" maxlength="11" required>
+                                    <input type="text" name="cpf" id="cpf" data-mask="000.000.000-00" value="{{ old('cpf') }}" class="cpf w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm"  required>
                                 </div>
                                 
                                 <div>
@@ -57,7 +57,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                                 <div>
                                     <label for="zip_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CEP (apenas números)</label>
-                                    <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" maxlength="8" required>
+                                    <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code') }}" class="zip_code w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" maxlength="8" required>
                                 </div>
                             </div>
                             
@@ -113,7 +113,7 @@
                                         
                                         <div>
                                             <label for="responsible[{{ $i }}][cpf]" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CPF (apenas números)</label>
-                                            <input type="text" name="responsible[{{ $i }}][cpf]" id="responsible[{{ $i }}][cpf]" value="{{ old('responsible.' . $i . '.cpf') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" maxlength="11" required>
+                                            <input type="text" name="responsible[{{ $i }}][cpf]" id="responsible[{{ $i }}][cpf]" value="{{ old('responsible.' . $i . '.cpf') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm cpf"  required>
                                         </div>
                                         
                                         <div>
@@ -138,6 +138,18 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            $(document).ready(function() {
+                $('.cpf').mask('000.000.000-00', {reverse: true});
+                $('.zip_code').mask('00000-000', {reverse: true});
+            });
+
+            document.getElementById('form').addEventListener('submit', function() {
+                $('.cpf').unmask();
+                $('.zip_code').unmask();
+            });
+
+
             // Função para buscar endereço pelo CEP usando a API ViaCEP
             const zipCodeInput = document.getElementById('zip_code');
             

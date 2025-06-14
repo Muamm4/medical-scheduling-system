@@ -16,9 +16,9 @@ enum AppointmentStatus: int
     public function label(): string
     {
         return match($this) {
-            self::SCHEDULED => 'Scheduled',
-            self::CANCELED => 'Canceled',
-            self::COMPLETED => 'Completed',
+            self::SCHEDULED => trans('appointment_status.scheduled'),
+            self::CANCELED => trans('appointment_status.canceled'),
+            self::COMPLETED => trans('appointment_status.completed'),
         };
     }
 

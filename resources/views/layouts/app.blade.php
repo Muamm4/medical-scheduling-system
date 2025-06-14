@@ -15,7 +15,6 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-
         {!! ToastMagic::styles() !!}
     </head>
     <body class="font-sans antialiased overflow-x-hidden dark:bg-[#0a0a0a]">
@@ -50,5 +49,7 @@
             </div>
         </div>
         {!! ToastMagic::scripts() !!}
+        <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-mask-plugin@1.14.16/dist/jquery.mask.min.js"></script>
     </body>
 </html>
