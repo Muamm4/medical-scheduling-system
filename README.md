@@ -1,61 +1,165 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></p>
+
+<h1 align="center">Sistema de Agendamento Médico</h1>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+Um sistema completo para gerenciamento de pacientes e agendamentos médicos desenvolvido com Laravel e tecnologias modernas.
 </p>
 
-## About Laravel
+## Sobre o Projeto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O Sistema de Agendamento Médico é uma aplicação web completa para clínicas e consultórios médicos, permitindo o gerenciamento eficiente de pacientes, responsáveis e agendamentos. Desenvolvido com Laravel e seguindo os princípios SOLID, o sistema oferece uma interface moderna e intuitiva para facilitar o dia a dia dos profissionais de saúde.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Principais Funcionalidades
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Cadastro e gerenciamento de pacientes
+- Vinculação de responsáveis aos pacientes
+- Agendamento de consultas
+- Dashboard com informações relevantes
+- Relatórios e estatísticas
 
-## Learning Laravel
+## Requisitos do Sistema
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Docker e Docker Compose
+- Git
+- Node.js (para json-server)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Configuração com Docker
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+O projeto está configurado para ser executado facilmente com Docker, sem necessidade de instalação local do PHP, MySQL ou outras dependências.
 
-## Laravel Sponsors
+### 1. Clone o Repositório
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone https://github.com/seu-usuario/medical-scheduling-system.git
+cd medical-scheduling-system
+```
 
-### Premium Partners
+### 2. Configure o Arquivo .env
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+cp .env.example .env
+```
 
-## Contributing
+Edite o arquivo `.env` para configurar as variáveis de ambiente. As configurações padrão para Docker já estão definidas:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=medical_scheduling
+DB_USERNAME=user
+DB_PASSWORD=root_password
+```
 
-## Code of Conduct
+### 3. Inicie os Containers Docker
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+docker-compose up -d
+```
 
-## Security Vulnerabilities
+Este comando iniciará os seguintes serviços:
+- **app**: Servidor PHP com Laravel (porta 8000)
+- **db**: Servidor MySQL (porta 3310)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Instale as Dependências e Configure o Projeto
 
-## License
+```bash
+docker-compose exec app composer install
+docker-compose exec app php artisan key:generate
+docker-compose exec app php artisan migrate --seed
+docker-compose exec app npm install
+docker-compose exec app npm run build
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 5. Acesse o Sistema
+
+O sistema estará disponível em [http://localhost:8000](http://localhost:8000)
+
+## Comandos Docker Úteis
+
+### Visualizar Logs
+
+```bash
+docker-compose logs -f
+```
+
+### Acessar o Terminal do Container
+
+```bash
+docker-compose exec app sh
+```
+
+### Parar os Containers
+
+```bash
+docker-compose down
+```
+
+### Reconstruir os Containers (após alterações no Dockerfile)
+
+```bash
+docker-compose up -d --build
+```
+
+## Estrutura do Projeto
+
+O projeto segue a arquitetura MVC do Laravel com algumas adaptações para seguir os princípios SOLID:
+
+- **Controllers**: Responsáveis por receber requisições e delegar para os serviços
+- **Services**: Contêm a lógica de negócio da aplicação
+- **Models**: Representam as entidades do banco de dados
+- **Views**: Interface do usuário usando Blade e TailwindCSS
+- **Mocks**: Dados fictícios para desenvolvimento e testes
+
+## Configuração do json-server
+
+O projeto utiliza json-server para simular uma API REST durante o desenvolvimento, especialmente para os dados de médicos.
+
+### Instalação do json-server
+
+```bash
+npm install -g json-server
+```
+
+Ou, se preferir instalar como dependência de desenvolvimento do projeto:
+
+```bash
+npm install --save-dev json-server
+```
+
+### Utilizando o json-server
+
+Para iniciar o servidor mock de médicos:
+
+```bash
+json-server --watch resources/mocks/doctors.json --port 3000
+```
+
+Isso disponibilizará uma API REST completa em `http://localhost:3000` com os seguintes endpoints:
+
+- `GET /doctors` - Lista todos os médicos
+- `GET /doctors/:id` - Obtém um médico específico pelo ID
+- `POST /doctors` - Cria um novo médico
+- `PUT /doctors/:id` - Atualiza um médico existente
+- `DELETE /doctors/:id` - Remove um médico
+
+### Estrutura do mock de médicos
+
+Cada objeto médico contém:
+
+```json
+{
+  "id": "doc101",
+  "nome": "Dra. Ana Silva",
+  "especialidade": "Clínico Geral",
+  "crm": "SP123456",
+  "cidade": "São Paulo",
+  "disponibilidade": [...],
+  "avaliacao_media": 4.8
+}
+```
+
+## Licença
+
+Este projeto está licenciado sob a [MIT license](https://opensource.org/licenses/MIT).
