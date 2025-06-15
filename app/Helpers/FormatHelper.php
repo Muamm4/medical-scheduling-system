@@ -69,4 +69,60 @@ class FormatHelper
         
         return substr($cep, 0, 5) . '-' . substr($cep, 5, 3);
     }
+
+    
+    /**
+     * Verifica se o CPF  valido
+     *
+     * @param string $cpf
+     * @return bool
+     */
+    public static function isValidCpf(?string $cpf): bool
+    {
+        if (empty($cpf)) {
+            return false;
+        }
+        
+        $cpf = preg_replace('/[^0-9]/', '', $cpf);
+        $length = strlen($cpf);
+        
+        if ($length !== 11) {
+            return false;
+        }
+        
+        if (preg_match('/(\d)\1{10}/', $cpf)) {
+            return false;
+        }
+        
+        $sum = 0;
+        $weight = 10;
+        
+        for ($i = 0; $i < 9; $i++) {
+            $sum += $cpf[$i] * $weight;
+            $weight--;
+        }
+        
+        $sum = (int) $sum;
+        $dv = $sum % 11;
+        $dv = $dv < 2 ? 0 : 11 - $dv;
+        
+        if ($cpf[9] !== (string) $dv) {
+            return false;
+        }
+        
+        $sum = 0;
+        $weight = 11;
+        
+        for ($i = 0; $i < 10; $i++) {
+            $sum += $cpf[$i] * $weight;
+            $weight--;
+        }
+        
+        $sum = (int) $sum;
+        $dv = $sum % 11;
+        $dv = $dv < 2 ? 0 : 11 - $dv;
+        
+        return $cpf[10] === (string) $dv;
+    }
+    
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\PatientServiceInterface;
+use App\Helpers\FormatHelper;
 use App\Models\Patient;
 use App\Models\Responsible;
 use Exception;
@@ -72,6 +73,16 @@ class PatientService implements PatientServiceInterface
     {
         try {
             DB::beginTransaction();
+
+            if (!FormatHelper::isValidCpf($validatedData['cpf'])) {
+                throw new Exception('CPF inválido');
+            }
+
+            foreach ($validatedData['responsible'] as $responsibleData) {
+                if (!FormatHelper::isValidCpf($responsibleData['cpf'])) {
+                    throw new Exception('CPF inválido');
+                }
+            }
             
             // Criar paciente
             $patient = Patient::create([
@@ -118,6 +129,16 @@ class PatientService implements PatientServiceInterface
     {
         try {
             DB::beginTransaction();
+
+            if (!FormatHelper::isValidCpf($validatedData['cpf'])) {
+                throw new Exception('CPF do paciente inválido');
+            }
+
+            foreach ($validatedData['responsible'] as $responsibleData) {
+                if (!FormatHelper::isValidCpf($responsibleData['cpf'])) {
+                    throw new Exception('CPF do responsável ' . $responsibleData['name'] . ' inválido');
+                }
+            }
             
             // Atualizar paciente
             $patient->update([
