@@ -1,5 +1,5 @@
 # Use uma imagem base PHP com FPM (FastCGI Process Manager)
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Instale as dependências do sistema
 RUN apk add --no-cache \
