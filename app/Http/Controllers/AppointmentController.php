@@ -11,7 +11,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AppointmentController extends Controller
 {
@@ -33,17 +35,48 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Exibe a lista de agendamentos
+     * Exibe a lista de agendamentos com filtros opcionais
      *
+     * @param Request $request
      * @return View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $appointments = Appointment::with('patient')
-            ->orderBy('appointment_datetime')
-            ->paginate(10);
-
-        return view('appointments.index', compact('appointments'));
+        // Iniciar a consulta base
+        $query = Appointment::with('patient');
+        
+        // Aplicar filtros se fornecidos
+        if ($request->filled('start_date')) {
+            $query->whereDate('appointment_datetime', '>=', $request->input('start_date'));
+        }
+        
+        if ($request->filled('end_date')) {
+            $query->whereDate('appointment_datetime', '<=', $request->input('end_date'));
+        }
+        
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+        
+        if ($request->filled('doctor')) {
+            $query->where('doctor_name', 'like', '%' . $request->input('doctor') . '%');
+        }
+        
+        if ($request->filled('specialty')) {
+            $query->where('specialty', 'like', '%' . $request->input('specialty') . '%');
+        }
+        
+        // Ordenar e paginar os resultados
+        $appointments = $query->orderBy('appointment_datetime')->paginate(10);
+        
+        // Manter os filtros na paginação
+        $appointments->appends($request->except('page'));
+        
+        return view('appointments.index', [
+            'appointments' => $appointments,
+            'filters' => $request->all(),
+            'statusOptions' => $this->appointmentService->getStatusOptions()
+        ]);
     }
 
     /**
@@ -238,6 +271,64 @@ class AppointmentController extends Controller
             return back()->withErrors(['error' => 'Não foi possível cancelar o agendamento.']);
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Erro ao cancelar agendamento: ' . $e->getMessage()]);
+        }
+    }
+    
+    /**
+     * Exporta os agendamentos para um arquivo CSV com os mesmos filtros da listagem
+     *
+     * @param Request $request
+     * @return StreamedResponse|RedirectResponse
+     */
+    public function exportCsv(Request $request)
+    {
+        try {
+            // Preparar os filtros a partir dos parâmetros da requisição
+            $filters = [];
+            
+            // Aplicar os mesmos filtros usados na listagem
+            if ($request->filled('start_date')) {
+                $filters['start_date'] = $request->input('start_date');
+            }
+            
+            if ($request->filled('end_date')) {
+                $filters['end_date'] = $request->input('end_date');
+            }
+            
+            if ($request->filled('status')) {
+                $filters['status'] = $request->input('status');
+            }
+            
+            if ($request->filled('doctor')) {
+                $filters['doctor'] = $request->input('doctor');
+            }
+            
+            if ($request->filled('specialty')) {
+                $filters['specialty'] = $request->input('specialty');
+            }
+            
+            // Gerar o relatório CSV
+            $filepath = $this->appointmentService->generateCsvReport($filters);
+            
+            // Verificar se o arquivo foi gerado
+            if (!Storage::exists($filepath)) {
+                throw new \Exception('Erro ao gerar o arquivo CSV.');
+            }
+            
+            // Retornar o arquivo para download
+            $filename = basename($filepath);
+            return Storage::download($filepath, $filename, [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Erro ao exportar agendamentos para CSV: ' . $e->getMessage(), [
+                'filters' => $request->all(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Redirecionar de volta com erro
+            return back()->withErrors(['error' => 'Erro ao exportar agendamentos: ' . $e->getMessage()])->withInput();
         }
     }
 }

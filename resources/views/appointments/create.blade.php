@@ -119,7 +119,6 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     if (data.error) {
                         alert(data.error);
                         return;
@@ -132,7 +131,7 @@
                         data.doctors.forEach(doctor => {
                             const option = document.createElement('option');
                             option.value = doctor.id;
-                            option.textContent = `${doctor.name} - ${doctor.specialty} (Avaliação: ${doctor.rating}/5)`;
+                            option.textContent = `${doctor.nome} - ${doctor.especialidade} (Avaliação: ${doctor.avaliacao_media}/5)`;
                             doctorSelect.appendChild(option);
                         });
                         
@@ -159,7 +158,6 @@
             
             // Quando selecionar um paciente
             patientSelect.addEventListener('change', function() {
-                console.log(this.value);
                 if (this.value) {
                     fetchDoctors(this.value);
                 } else {
@@ -187,6 +185,7 @@
                     })
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data);
                         // Limpar a tabela de disponibilidades
                         availabilityTableBody.innerHTML = '';
                         

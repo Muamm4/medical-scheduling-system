@@ -15,7 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AppointmentService implements AppointmentServiceInterface
@@ -77,13 +79,16 @@ class AppointmentService implements AppointmentServiceInterface
     {
         try {
             $endpoint = "{$this->doctorsApiUrl}/doctors";
+            $payload = ['city' => $city];
             
             // Não envie o parâmetro city na URL, pois o json-server não suporta filtros complexos
             // Vamos buscar todos os médicos e filtrar no lado do servidor
             $response = Http::get($endpoint);
-            $doctors = $response->json();
             
-            $this->logExternalCall('findAvailableDoctorsByCity', ['city' => $city], $doctors);
+            // Registrar a chamada externa antes de processar a resposta
+            $this->logExternalCall('findAvailableDoctorsByCity', $payload, $response);
+            
+            $doctors = $response->json();
             
             // Filtra os médicos pela cidade
             $filteredDoctors = array_filter($doctors, function ($doctor) use ($city) {
@@ -93,7 +98,12 @@ class AppointmentService implements AppointmentServiceInterface
             // Reindexar o array para garantir que seja retornado como array sequencial
             return array_values($filteredDoctors);
         } catch (Exception $e) {
+            // Registrar o erro na chamada externa
             $this->logExternalCall('findAvailableDoctorsByCity', ['city' => $city], [], $e->getMessage());
+            Log::error("Erro ao buscar médicos por cidade: {$e->getMessage()}", [
+                'exception' => $e,
+                'city' => $city
+            ]);
             throw $e;
         }
     }
@@ -105,12 +115,14 @@ class AppointmentService implements AppointmentServiceInterface
     {
         try {
             $endpoint = "{$this->doctorsApiUrl}/doctors/{$doctorId}";
-            $payload = ['date' => $date];
+            $payload = ['doctor_id' => $doctorId, 'date' => $date];
             
             $response = Http::get($endpoint);
-            $doctor = $response->json();
             
-            $this->logExternalCall('getAvailableTimeSlots', $payload, $doctor);
+            // Registrar a chamada externa com a resposta completa
+            $this->logExternalCall('getAvailableTimeSlots', $payload, $response);
+            
+            $doctor = $response->json();
             
             if (!$doctor) {
                 throw new Exception("Médico não encontrado");
@@ -127,7 +139,15 @@ class AppointmentService implements AppointmentServiceInterface
             
             return $availability;
         } catch (Exception $e) {
+            // Registrar o erro na chamada externa com detalhes
             $this->logExternalCall('getAvailableTimeSlots', $payload, [], $e->getMessage());
+            
+            Log::error("Erro ao buscar horários disponíveis: {$e->getMessage()}", [
+                'exception' => $e,
+                'doctor_id' => $doctorId,
+                'date' => $date
+            ]);
+            
             throw $e;
         }
     }
@@ -139,11 +159,14 @@ class AppointmentService implements AppointmentServiceInterface
     {
         try {
             $endpoint = "{$this->doctorsApiUrl}/doctors/{$doctorId}";
+            $payload = ['doctor_id' => $doctorId];
             
             $response = Http::get($endpoint);
-            $doctor = $response->json();
             
-            $this->logExternalCall('getAllDoctorAvailability', ['doctor_id' => $doctorId], $doctor);
+            // Registrar a chamada externa com a resposta completa
+            $this->logExternalCall('getAllDoctorAvailability', $payload, $response);
+            
+            $doctor = $response->json();
             
             if (!$doctor) {
                 throw new Exception("Médico não encontrado");
@@ -152,20 +175,21 @@ class AppointmentService implements AppointmentServiceInterface
             $rawAvailability = $doctor['disponibilidade'] ?? [];
             
             // Buscar agendamentos existentes para este médico
-            $existingAppointments = Appointment::where('doctor_id', $doctorId)
+            $existingAppointments = Appointment::where('doctor_name', $doctor['nome'])
                 ->where('status', AppointmentStatus::SCHEDULED)
                 ->get();
             
             // Transformar a disponibilidade no formato esperado pelo frontend
             $formattedAvailability = [];
-            
-            foreach ($rawAvailability as $date => $times) {
+ 
+            foreach ($rawAvailability as $slot) {
+                $date = $slot['data'];
                 $formattedSlot = [
                     'data' => $date,
                     'horarios' => []
                 ];
                 
-                foreach ($times as $time) {
+                foreach ($slot['horarios'] as $time) {
                     // Verificar se já existe um agendamento para este horário
                     $isOccupied = $existingAppointments->contains(function ($appointment) use ($date, $time) {
                         $appointmentDate = Carbon::parse($appointment->appointment_datetime)->format('Y-m-d');
@@ -186,7 +210,14 @@ class AppointmentService implements AppointmentServiceInterface
             
             return $formattedAvailability;
         } catch (Exception $e) {
+            // Registrar o erro na chamada externa com detalhes
             $this->logExternalCall('getAllDoctorAvailability', ['doctor_id' => $doctorId], [], $e->getMessage());
+            
+            Log::error("Erro ao buscar disponibilidade do médico: {$e->getMessage()}", [
+                'exception' => $e,
+                'doctor_id' => $doctorId
+            ]);
+            
             throw $e;
         }
     }
@@ -201,14 +232,17 @@ class AppointmentService implements AppointmentServiceInterface
             
             // Busca informações do médico
             $doctorId = $validatedData['doctor_id'];
+            $payload = ['doctor_id' => $doctorId];
             $doctorResponse = Http::get("{$this->doctorsApiUrl}/doctors/{$doctorId}");
+            
+            // Registrar a chamada externa antes de processar a resposta
+            $this->logExternalCall('getDoctorInfo', $payload, $doctorResponse);
+            
             $doctor = $doctorResponse->json();
             
             if (!$doctor) {
                 throw new Exception("Médico não encontrado");
             }
-            
-            $this->logExternalCall('getDoctorInfo', ['doctor_id' => $doctorId], $doctor);
             
             // Combina data e hora
             $appointmentDateTime = Carbon::parse(
@@ -231,7 +265,18 @@ class AppointmentService implements AppointmentServiceInterface
             return $appointment;
         } catch (Exception $e) {
             DB::rollBack();
+            
+            // Registrar o erro na chamada externa com detalhes
             $this->logExternalCall('createAppointment', $validatedData, [], $e->getMessage());
+            
+            Log::error("Erro ao criar agendamento: {$e->getMessage()}", [
+                'exception' => $e,
+                'doctor_id' => $validatedData['doctor_id'] ?? 'unknown',
+                'patient_id' => $validatedData['patient_id'] ?? 'unknown',
+                'appointment_date' => $validatedData['appointment_date'] ?? 'unknown',
+                'appointment_time' => $validatedData['appointment_time'] ?? 'unknown'
+            ]);
+            
             throw $e;
         }
     }
@@ -255,7 +300,18 @@ class AppointmentService implements AppointmentServiceInterface
             return true;
         } catch (Exception $e) {
             DB::rollBack();
+            
+            // Registrar o erro na chamada externa com detalhes
             $this->logExternalCall('cancelAppointment', ['appointment_id' => $appointment->id], [], $e->getMessage());
+            
+            Log::error("Erro ao cancelar agendamento: {$e->getMessage()}", [
+                'exception' => $e,
+                'appointment_id' => $appointment->id,
+                'patient_id' => $appointment->patient_id,
+                'doctor_name' => $appointment->doctor_name,
+                'appointment_datetime' => $appointment->appointment_datetime
+            ]);
+            
             throw $e;
         }
     }
@@ -273,44 +329,213 @@ class AppointmentService implements AppointmentServiceInterface
      */
     public function isTimeSlotAvailable(string $doctorId, string $date, string $time): bool
     {
-        // Combinar data e hora para criar o datetime completo
-        $appointmentDateTime = Carbon::parse("$date $time");
-        
-        // Verificar se já existe um agendamento para o médico nesta data e horário
-        $existingAppointment = Appointment::where('doctor_id', $doctorId)
-            ->where('status', AppointmentStatus::SCHEDULED)
-            ->whereDate('appointment_datetime', $appointmentDateTime->toDateString())
-            ->whereTime('appointment_datetime', $appointmentDateTime->toTimeString())
-            ->first();
-        
-        // Retorna true se o horário estiver disponível (não existe agendamento)
-        return $existingAppointment === null;
+        try {
+            // Obter os horários disponíveis para o médico na data especificada
+            $availableSlots = $this->getAvailableTimeSlots($doctorId, $date);
+            
+            // Verificar se o horário solicitado está na lista de horários disponíveis
+            return in_array($time, $availableSlots);
+        } catch (Exception $e) {
+            // Registrar o erro no log
+            $this->logExternalCall('isTimeSlotAvailable', [
+                'doctor_id' => $doctorId,
+                'date' => $date,
+                'time' => $time
+            ], [], $e->getMessage());
+            
+            Log::error("Erro ao verificar disponibilidade de horário: {$e->getMessage()}", [
+                'exception' => $e,
+                'doctor_id' => $doctorId,
+                'date' => $date,
+                'time' => $time
+            ]);
+            return false;
+        }
     }
 
     /**
      * {@inheritdoc}
      */
+    public function getStatusOptions(): array
+    {
+        return AppointmentStatus::toArray();
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
     public function logExternalCall(string $action, array $payload, $response, ?string $error = null): void
     {
-        $logData = [
-            'action' => $action,
-            'payload' => $payload,
-            'response' => $response,
-            'timestamp' => Carbon::now()->toDateTimeString(),
-        ];
+        // Extrair informações do endpoint a partir do action
+        $endpoint = '';
+        $method = 'GET';
+        $httpStatus = null;
         
-        IntegrationLog::log(
-            $action,
-            json_encode($payload),
-            $response,
-            $error
-        );
-        
-        if ($error) {
-            $logData['error'] = $error;
-            Log::error('API External Call Error', $logData);
-        } else {
-            Log::info('API External Call', $logData);
+        // Determinar o endpoint e método com base na ação
+        if (strpos($action, 'findAvailableDoctorsByCity') !== false) {
+            $endpoint = "{$this->doctorsApiUrl}/doctors";
+            $method = 'GET';
+        } elseif (strpos($action, 'getAvailableTimeSlots') !== false || strpos($action, 'getAllDoctorAvailability') !== false) {
+            $doctorId = $payload['doctor_id'] ?? ($payload['doctorId'] ?? 'unknown');
+            $endpoint = "{$this->doctorsApiUrl}/doctors/{$doctorId}";
+            $method = 'GET';
+        } elseif (strpos($action, 'isTimeSlotAvailable') !== false) {
+            $doctorId = $payload['doctor_id'] ?? 'unknown';
+            $endpoint = "{$this->doctorsApiUrl}/doctors/{$doctorId}";
+            $method = 'GET';
+        } elseif (strpos($action, 'createAppointment') !== false) {
+            $endpoint = "{$this->doctorsApiUrl}/appointments";
+            $method = 'POST';
+        } elseif (strpos($action, 'cancelAppointment') !== false) {
+            $appointmentId = $payload['appointment_id'] ?? 'unknown';
+            $endpoint = "{$this->doctorsApiUrl}/appointments/{$appointmentId}";
+            $method = 'PUT';
         }
+        
+        // Determinar o status HTTP com base na resposta
+        if (is_object($response) && method_exists($response, 'status')) {
+            $httpStatus = $response->status();
+        }
+        
+        // Converter a resposta para array se for um objeto Response
+        $responseData = $response;
+        if (is_object($response) && method_exists($response, 'json')) {
+            $responseData = $response->json();
+        }
+        
+        try {
+            // Garantir que os dados estejam no formato correto para o banco de dados
+            $logData = [
+                'endpoint' => $endpoint,
+                'method' => $method,
+                'payload' => $payload,
+                'response' => $responseData,
+                'http_status' => $httpStatus,
+                'error' => $error
+            ];
+            
+            // Registrar o log usando o método create do modelo IntegrationLog
+            IntegrationLog::create($logData);
+            
+            // Registrar também no log do Laravel para facilitar o debug
+            Log::channel('api')->info("API Call: {$action}", [
+                'endpoint' => $endpoint,
+                'method' => $method,
+                'payload' => json_encode($payload),
+                'response' => json_encode($responseData),
+                'http_status' => $httpStatus,
+                'error' => $error
+            ]);
+        } catch (\Exception $e) {
+            // Se houver erro ao registrar o log, pelo menos garantimos que fique no log do Laravel
+            Log::error("Erro ao registrar log de integração: {$e->getMessage()}", [
+                'exception' => $e,
+                'action' => $action,
+                'endpoint' => $endpoint,
+                'method' => $method
+            ]);
+        }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function generateCsvReport(array $filters = []): string
+    {
+        // Iniciar a consulta base
+        $query = Appointment::with(['patient'])
+            ->select(
+                'appointments.id',
+                'patients.name as patient_name',
+                'patients.cpf as patient_cpf',
+                'appointments.doctor_name',
+                'appointments.specialty',
+                'appointments.appointment_datetime',
+                'appointments.status',
+                'appointments.created_at'
+            )
+            ->join('patients', 'appointments.patient_id', '=', 'patients.id');
+        
+        // Aplicar filtros se fornecidos
+        if (!empty($filters['start_date'])) {
+            $query->whereDate('appointment_datetime', '>=', $filters['start_date']);
+        }
+        
+        if (!empty($filters['end_date'])) {
+            $query->whereDate('appointment_datetime', '<=', $filters['end_date']);
+        }
+        
+        if (!empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+        
+        if (!empty($filters['doctor'])) {
+            $query->where('doctor_name', 'like', '%' . $filters['doctor'] . '%');
+        }
+        
+        if (!empty($filters['specialty'])) {
+            $query->where('specialty', 'like', '%' . $filters['specialty'] . '%');
+        }
+        
+        // Ordenar por data de agendamento
+        $appointments = $query->orderBy('appointment_datetime', 'desc')->get();
+        
+        // Definir o nome do arquivo
+        $filename = 'agendamentos_' . date('Y-m-d_His') . '_' . Str::random(8) . '.csv';
+        $filepath = 'reports/' . $filename;
+        
+        // Criar o diretório de relatórios se não existir
+        if (!Storage::exists('reports')) {
+            Storage::makeDirectory('reports');
+        }
+        
+        // Abrir o arquivo para escrita com UTF-8
+        $handle = fopen(Storage::path($filepath), 'w');
+        
+        // Adicionar BOM (Byte Order Mark) UTF-8 no início do arquivo
+        fputs($handle, "\xEF\xBB\xBF");
+        
+        // Configurar o separador e o delimitador para o CSV
+        $delimiter = ';'; // Ponto e vírgula como separador
+        $enclosure = '"'; // Aspas duplas como delimitador
+        
+        // Escrever o cabeçalho do CSV
+        fputcsv($handle, [
+            'ID',
+            'Paciente',
+            'CPF',
+            'Médico',
+            'Especialidade',
+            'Data/Hora',
+            'Status',
+            'Criado em'
+        ], $delimiter, $enclosure);
+        
+        // Escrever os dados
+        foreach ($appointments as $appointment) {
+            // Obter o label do status
+            $statusLabel = match($appointment->status->value) {
+                AppointmentStatus::SCHEDULED->value => __('appointment_status.scheduled'),
+                AppointmentStatus::CANCELED->value => __('appointment_status.canceled'),
+                AppointmentStatus::COMPLETED->value => __('appointment_status.completed'),
+                default => 'Desconhecido'
+            };
+            
+            fputcsv($handle, [
+                $appointment->id,
+                $appointment->patient_name,
+                $appointment->patient_cpf,
+                $appointment->doctor_name,
+                $appointment->specialty,
+                Carbon::parse($appointment->appointment_datetime)->format('d/m/Y H:i'),
+                $statusLabel,
+                Carbon::parse($appointment->created_at)->format('d/m/Y H:i'),
+            ], $delimiter, $enclosure);
+        }
+        
+        // Fechar o arquivo
+        fclose($handle);
+        
+        return $filepath;
     }
 }

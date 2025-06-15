@@ -23,6 +23,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/appointments/find-doctors', [AppointmentController::class, 'findDoctors'])->name('appointments.findDoctors');
     Route::post('/appointments/get-time-slots', [AppointmentController::class, 'getTimeSlots'])->name('appointments.getTimeSlots');
     Route::post('/appointments/get-all-availability', [AppointmentController::class, 'getAllDoctorAvailability'])->name('appointments.getAllAvailability');
+    Route::get('/appointments/export/csv', [AppointmentController::class, 'exportCsv'])->name('appointments.exportCsv');
     Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

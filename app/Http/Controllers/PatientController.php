@@ -32,11 +32,38 @@ class PatientController extends Controller
     /**
      * Display a listing of the patients.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $patients = Patient::latest()->paginate(10);
+        $query = Patient::query();
+        
+        // Filtro por nome
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+        
+        // Filtro por CPF
+        if ($request->filled('cpf')) {
+            $cpf = preg_replace('/[^0-9]/', '', $request->cpf);
+            $query->where('cpf', 'like', '%' . $cpf . '%');
+        }
+        
+        // Filtro por cidade
+        if ($request->filled('city')) {
+            $query->where('city', 'like', '%' . $request->city . '%');
+        }
+        
+        // Filtro por estado
+        if ($request->filled('state')) {
+            $query->where('state', $request->state);
+        }
+        
+        // Ordenação
+        $query->latest();
+        
+        $patients = $query->paginate(10)->withQueryString();
         
         return view('patients.index', compact('patients'));
     }

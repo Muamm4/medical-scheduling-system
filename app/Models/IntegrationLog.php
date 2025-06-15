@@ -10,6 +10,13 @@ class IntegrationLog extends Model
     use HasFactory;
 
     /**
+     * Nome da tabela associada ao modelo.
+     *
+     * @var string
+     */
+    protected $table = 'integration_logs';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -31,16 +38,24 @@ class IntegrationLog extends Model
     protected $casts = [
         'payload' => 'array',
         'response' => 'array',
+        'http_status' => 'integer',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime',
     ];
 
     /**
-     * Indicates if the model should be timestamped.
+     * Indica se o modelo deve ser timestamped.
+     * Usamos apenas created_at, sem updated_at.
      *
      * @var bool
      */
     public $timestamps = false;
+    
+    /**
+     * Nome da coluna de timestamp de criação.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_at';
 
     /**
      * Static method to create a new log entry.

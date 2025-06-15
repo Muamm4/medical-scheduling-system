@@ -19,6 +19,83 @@
                     <p>{{ session('success') }}</p>
                 </div>
             @endif
+            
+            <!-- Formulário de filtros para pacientes -->
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Filtrar Pacientes</h3>
+                    <form action="{{ route('patients.index') }}" method="get" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome</label>
+                                <input type="text" name="name" id="name" value="{{ request('name') }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                            
+                            <div>
+                                <label for="cpf" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CPF</label>
+                                <input type="text" name="cpf" id="cpf" value="{{ request('cpf') }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                            
+                            <div>
+                                <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cidade</label>
+                                <input type="text" name="city" id="city" value="{{ request('city') }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Estado</label>
+                                <select name="state" id="state" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">Todos</option>
+                                    <option value="AC" {{ request('state') == 'AC' ? 'selected' : '' }}>AC</option>
+                                    <option value="AL" {{ request('state') == 'AL' ? 'selected' : '' }}>AL</option>
+                                    <option value="AP" {{ request('state') == 'AP' ? 'selected' : '' }}>AP</option>
+                                    <option value="AM" {{ request('state') == 'AM' ? 'selected' : '' }}>AM</option>
+                                    <option value="BA" {{ request('state') == 'BA' ? 'selected' : '' }}>BA</option>
+                                    <option value="CE" {{ request('state') == 'CE' ? 'selected' : '' }}>CE</option>
+                                    <option value="DF" {{ request('state') == 'DF' ? 'selected' : '' }}>DF</option>
+                                    <option value="ES" {{ request('state') == 'ES' ? 'selected' : '' }}>ES</option>
+                                    <option value="GO" {{ request('state') == 'GO' ? 'selected' : '' }}>GO</option>
+                                    <option value="MA" {{ request('state') == 'MA' ? 'selected' : '' }}>MA</option>
+                                    <option value="MT" {{ request('state') == 'MT' ? 'selected' : '' }}>MT</option>
+                                    <option value="MS" {{ request('state') == 'MS' ? 'selected' : '' }}>MS</option>
+                                    <option value="MG" {{ request('state') == 'MG' ? 'selected' : '' }}>MG</option>
+                                    <option value="PA" {{ request('state') == 'PA' ? 'selected' : '' }}>PA</option>
+                                    <option value="PB" {{ request('state') == 'PB' ? 'selected' : '' }}>PB</option>
+                                    <option value="PR" {{ request('state') == 'PR' ? 'selected' : '' }}>PR</option>
+                                    <option value="PE" {{ request('state') == 'PE' ? 'selected' : '' }}>PE</option>
+                                    <option value="PI" {{ request('state') == 'PI' ? 'selected' : '' }}>PI</option>
+                                    <option value="RJ" {{ request('state') == 'RJ' ? 'selected' : '' }}>RJ</option>
+                                    <option value="RN" {{ request('state') == 'RN' ? 'selected' : '' }}>RN</option>
+                                    <option value="RS" {{ request('state') == 'RS' ? 'selected' : '' }}>RS</option>
+                                    <option value="RO" {{ request('state') == 'RO' ? 'selected' : '' }}>RO</option>
+                                    <option value="RR" {{ request('state') == 'RR' ? 'selected' : '' }}>RR</option>
+                                    <option value="SC" {{ request('state') == 'SC' ? 'selected' : '' }}>SC</option>
+                                    <option value="SP" {{ request('state') == 'SP' ? 'selected' : '' }}>SP</option>
+                                    <option value="SE" {{ request('state') == 'SE' ? 'selected' : '' }}>SE</option>
+                                    <option value="TO" {{ request('state') == 'TO' ? 'selected' : '' }}>TO</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                                </svg>
+                                Filtrar
+                            </button>
+                            
+                            <a href="{{ route('patients.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                Limpar Filtros
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
             <div class="bg-white dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">

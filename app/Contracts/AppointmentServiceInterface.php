@@ -99,4 +99,19 @@ interface AppointmentServiceInterface
      * @return void
      */
     public function logExternalCall(string $action, array $payload, $response, ?string $error = null): void;
+    
+    /**
+     * Retorna as opções de status para os filtros
+     *
+     * @return array
+     */
+    public function getStatusOptions(): array;
+    
+    /**
+     * Gera um relatório CSV dos agendamentos com base nos filtros
+     *
+     * @param array $filters Filtros opcionais (data, status, médico, etc)
+     * @return string Caminho do arquivo CSV gerado
+     */
+    public function generateCsvReport(array $filters = []): string;
 }
