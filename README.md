@@ -41,21 +41,10 @@ cd medical-scheduling-system
 cp .env.example .env
 ```
 
-Edite o arquivo `.env` para configurar as variáveis de ambiente. As configurações padrão para Docker já estão definidas:
-
-```
-DB_CONNECTION=mysql
-DB_HOST=db
-DB_PORT=3306
-DB_DATABASE=medical_scheduling
-DB_USERNAME=user
-DB_PASSWORD=root_password
-```
-
 ### 3. Inicie os Containers Docker
 
 ```bash
-docker-compose up -d
+docker-compose up --build -d
 ```
 
 Este comando iniciará os seguintes serviços:
@@ -69,17 +58,7 @@ O serviço mockapi roda o json-server em um container Docker, expondo a API de m
 
 **Atenção:** Todas as cidades dos médicos cadastrados são apenas "Vitória" ou "Vila Velha".
 
-### 4. Instale as Dependências e Configure o Projeto
-
-```bash
-docker compose exec app composer install
-docker compose exec app php artisan key:generate
-docker compose exec app php artisan migrate --seed
-docker compose exec app npm install
-docker compose exec app npm run build
-```
-
-### 5. Acesse o Sistema
+### 4. Acesse o Sistema
 
 O sistema estará disponível em [http://localhost:8000](http://localhost:8000)
 

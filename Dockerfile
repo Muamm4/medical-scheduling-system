@@ -35,6 +35,16 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data storage bootstrap/cache
 RUN chmod -R 775 storage bootstrap/cache
 
+RUN composer install
+
+RUN php artisan key:generate
+
+RUN php artisan migrate --seed
+
+RUN npm install
+
+RUN npm run build
+
 # Exponha a porta onde o servidor PHP embutido irá rodar
 EXPOSE 8000
 

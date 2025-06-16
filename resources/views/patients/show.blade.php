@@ -5,11 +5,11 @@
                 {{ __('Detalhes do Paciente') }}
             </h2>
             <div class="flex space-x-2">
-                <a href="{{ route('patients.edit', $patient) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition">
-                    Editar
+                <a href="{{ route('patients.edit', $patient) }}" class="transition">
+                    <x-button>{{ __('Editar') }}</x-button>
                 </a>
-                <a href="{{ route('patients.index') }}" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition">
-                    Voltar
+                <a href="{{ route('patients.index') }}" class="transition">
+                    <x-button>{{ __('Voltar') }}</x-button>
                 </a>
             </div>
         </div>
@@ -26,36 +26,36 @@
             <!-- Informações do Paciente -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Dados do Paciente</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ __('Patient Information') }}</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <div class="mb-4">
-                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Nome</h4>
+                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Name') }}</h4>
                                 <p class="text-base text-gray-900 dark:text-gray-100">{{ $patient->name }}</p>
                             </div>
                             
                             <div class="mb-4">
-                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">CPF</h4>
+                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('CPF') }}</h4>
                                 <p class="text-base text-gray-900 dark:text-gray-100">
                                     {{ \App\Helpers\FormatHelper::formatCpf($patient->cpf) }}
                                 </p>
                             </div>
                             
                             <div class="mb-4">
-                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Data de Nascimento</h4>
+                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Birth Date') }}</h4>
                                 <p class="text-base text-gray-900 dark:text-gray-100">{{ $patient->birth_date->format('d/m/Y') }}</p>
                             </div>
                             
                             <div class="mb-4">
-                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Idade</h4>
+                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Age') }}</h4>
                                 <p class="text-base text-gray-900 dark:text-gray-100">{{ $patient->age }} anos</p>
                             </div>
                         </div>
                         
                         <div>
                             <div class="mb-4">
-                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Endereço</h4>
+                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Address') }}</h4>
                                 <p class="text-base text-gray-900 dark:text-gray-100">
                                     {{ $patient->street }}, {{ $patient->number }}
                                     @if($patient->complement)
@@ -65,17 +65,17 @@
                             </div>
                             
                             <div class="mb-4">
-                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Bairro</h4>
+                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Neighborhood') }}</h4>
                                 <p class="text-base text-gray-900 dark:text-gray-100">{{ $patient->neighborhood }}</p>
                             </div>
                             
                             <div class="mb-4">
-                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Cidade/UF</h4>
+                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('City/State') }}</h4>
                                 <p class="text-base text-gray-900 dark:text-gray-100">{{ $patient->city }}/{{ $patient->state }}</p>
                             </div>
                             
                             <div class="mb-4">
-                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">CEP</h4>
+                                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('CEP') }}</h4>
                                 <p class="text-base text-gray-900 dark:text-gray-100">
                                     {{ \App\Helpers\FormatHelper::formatCep($patient->zip_code) }}
                                 </p>
@@ -88,27 +88,27 @@
             <!-- Responsáveis -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Responsáveis</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ __('Responsibles') }}</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         @foreach($patient->responsibles as $responsible)
                             <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-md">
-                                <h4 class="font-medium text-gray-900 dark:text-gray-100 mb-3">Responsável {{ $loop->iteration }}</h4>
+                                <h4 class="font-medium text-gray-900 dark:text-gray-100 mb-3">{{ __('Responsible') }} {{ $loop->iteration }}</h4>
                                 
                                 <div class="mb-2">
-                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Nome:</span>
+                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Name') }}</span>
                                     <span class="text-base text-gray-900 dark:text-gray-100 ml-2">{{ $responsible->name }}</span>
                                 </div>
                                 
                                 <div class="mb-2">
-                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">CPF:</span>
+                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('CPF') }}</span>
                                     <span class="text-base text-gray-900 dark:text-gray-100 ml-2">
                                         {{ \App\Helpers\FormatHelper::formatCpf($responsible->cpf) }}
                                     </span>
                                 </div>
                                 
                                 <div>
-                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Parentesco:</span>
+                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Relationship') }}</span>
                                     <span class="text-base text-gray-900 dark:text-gray-100 ml-2">{{ $responsible->relationship }}</span>
                                 </div>
                             </div>
@@ -121,10 +121,10 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Agendamentos</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('Appointments') }}</h3>
                         
-                        <a href="{{ route('appointments.create', ['patient_id' => $patient->id]) }}" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-                            Novo Agendamento
+                        <a href="{{ route('appointments.create', ['patient_id' => $patient->id]) }}" >
+                            <x-button>{{ __('New Appointment') }}</x-button>
                         </a>
                     </div>
                     
@@ -162,12 +162,26 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex space-x-2">
                                                     <a href="#" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
-                                                        Visualizar
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                        </svg>
                                                     </a>
                                                     
                                                     @if($appointment->status->value === 1)
                                                         <a href="#" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
-                                                            Cancelar
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                    class="h-5 w-5" fill="none"
+                                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="2"
+                                                                        d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
                                                         </a>
                                                     @endif
                                                 </div>
@@ -178,7 +192,7 @@
                             </table>
                         </div>
                     @else
-                        <p class="text-center py-4 text-gray-500 dark:text-gray-400">Nenhum agendamento registrado para este paciente.</p>
+                        <p class="text-center py-4 text-gray-500 dark:text-gray-400">{{ __('No appointments registered for this patient.') }}</p>
                     @endif
                 </div>
             </div>

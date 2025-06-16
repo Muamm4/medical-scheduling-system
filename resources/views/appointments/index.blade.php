@@ -2,13 +2,13 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-100 leading-tight">
-                {{ __('Agendamentos') }}
+                {{ __('Appointments') }}
             </h2>
             <div>
                 <a href="{{ route('appointments.create') }}"
                     class="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <x-button>
-                        {{ __('Novo Agendamento') }}
+                        {{ __('New Appointment') }}
                     </x-button>
                 </a>
             </div>
@@ -38,13 +38,12 @@
             <!-- Formulário de filtros para agendamentos -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Filtrar Agendamentos</h3>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{{ __('Filter Appointments') }}</h3>
                     <form action="{{ route('appointments.index') }}" method="get" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label for="start_date"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data
-                                    Inicial</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Start Date') }}</label>
                                 <input type="date" name="start_date" id="start_date"
                                     value="{{ request('start_date') }}"
                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
@@ -52,18 +51,17 @@
 
                             <div>
                                 <label for="end_date"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data
-                                    Final</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('End Date') }}</label>
                                 <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}"
                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             </div>
 
                             <div>
                                 <label for="status"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Status') }}</label>
                                 <select name="status" id="status"
                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="">Todos</option>
+                                    <option value="">{{ __('All') }}</option>
                                     @foreach ($statusOptions as $value => $label)
                                         <option value="{{ $value }}" {{ request('status') == $value ? 'selected' : '' }}>
                                             {{ $label }}
@@ -76,17 +74,17 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="doctor"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Médico</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Doctor') }}</label>
                                 <input type="text" name="doctor" id="doctor" value="{{ request('doctor') }}"
-                                    placeholder="Nome do médico"
+                                    placeholder="{{ __('Doctor Name') }}"
                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             </div>
 
                             <div>
                                 <label for="specialty"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Especialidade</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Specialty') }}</label>
                                 <input type="text" name="specialty" id="specialty"
-                                    value="{{ request('specialty') }}" placeholder="Especialidade"
+                                    value="{{ request('specialty') }}" placeholder="{{ __('Specialty') }}"
                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             </div>
                         </div>
@@ -99,7 +97,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
-                                Filtrar
+                                {{ __('Filter') }}
                             </button>
 
                             <a href="{{ route('appointments.exportCsv', request()->query()) }}"
@@ -109,7 +107,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
-                                Exportar CSV
+                                {{ __('Export to CSV') }}
                             </a>
                         </div>
                     </form>
@@ -125,22 +123,22 @@
                                     <tr>
                                         <th
                                             class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Paciente</th>
+                                            {{ __('Patient') }}</th>
                                         <th
                                             class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Médico</th>
+                                            {{ __('Doctor') }}</th>
                                         <th
                                             class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Especialidade</th>
+                                            {{ __('Specialty') }}</th>
                                         <th
                                             class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Data/Hora</th>
+                                            {{ __('Date & Time') }}</th>
                                         <th
                                             class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Status</th>
+                                            {{ __('Status') }}</th>
                                         <th
                                             class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Ações</th>
+                                            {{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -214,7 +212,7 @@
                         </div>
                     @else
                         <div class="text-center py-8 dark:text-gray-100 dark:bg-gray-900">
-                            <p class="text-gray-500">Nenhum agendamento encontrado.</p>
+                            <p class="text-gray-500">{{ __('No appointments found.') }}</p>
                         </div>
                     @endif
                 </div>

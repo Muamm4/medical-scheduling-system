@@ -6,7 +6,7 @@
             <div class="flex items-center">
                 <a href="{{ route('dashboard') }}" class="flex items-center">
                     <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                    <span class="ml-3 text-xl font-semibold text-gray-800 dark:text-gray-200">Medical Scheduling</span>
+                    <span class="ml-3 text-xl font-semibold text-gray-800 dark:text-gray-200">{{ __('MedSchedule') }}</span>
                 </a>
             </div>
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Contracts;
+namespace App\Application\Interfaces;
 
 use App\Models\Appointment;
 use App\Models\Patient;

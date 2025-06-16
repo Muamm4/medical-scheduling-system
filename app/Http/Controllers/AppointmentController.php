@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Contracts\AppointmentServiceInterface;
+use App\Application\Interfaces\AppointmentServiceInterface;
 use App\Models\Appointment;
 use App\Models\Patient;
 use Illuminate\Http\JsonResponse;
