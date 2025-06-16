@@ -61,6 +61,13 @@ docker-compose up -d
 Este comando iniciará os seguintes serviços:
 - **app**: Servidor PHP com Laravel (porta 8000)
 - **db**: Servidor MySQL (porta 3310)
+- **mockapi**: API mock de médicos usando json-server (porta 3000)
+
+### Mock de médicos via Docker
+
+O serviço mockapi roda o json-server em um container Docker, expondo a API de médicos em http://localhost:3000. Os dados estão no arquivo `resources/mocks/doctors.json`. Ao alterar esse arquivo, o mock é atualizado automaticamente.
+
+**Atenção:** Todas as cidades dos médicos cadastrados são apenas "Vitória" ou "Vila Velha".
 
 ### 4. Instale as Dependências e Configure o Projeto
 
@@ -154,12 +161,65 @@ Cada objeto médico contém:
   "nome": "Dra. Ana Silva",
   "especialidade": "Clínico Geral",
   "crm": "SP123456",
-  "cidade": "São Paulo",
+  "cidade": "Vitória" ou "Vila Velha",
   "disponibilidade": [...],
   "avaliacao_media": 4.8
 }
 ```
 
-## Licença
+## Fluxo do usuário
 
-Este projeto está licenciado sob a [MIT license](https://opensource.org/licenses/MIT).
+1. **Cadastro de usuário:**
+   - O usuário realiza seu registro para acessar o sistema.
+2. **Cadastro de paciente e responsável:**
+   - Após o login, o usuário pode cadastrar um paciente e associar um responsável (caso necessário).
+3. **Criação de consulta:**
+   - Com paciente e responsável cadastrados, é possível agendar uma consulta médica para o paciente.
+
+Esse fluxo garante que apenas usuários autenticados possam cadastrar pacientes, responsáveis e criar consultas, mantendo a organização e segurança dos dados.
+
+## Diagrama de Entidades
+```
++----------------+           +---------------------+
+|   Pacientes    |<----------|    Responsaveis     |
++----------------+ 1      N  +---------------------+
+| id (PK)        |           | id (PK)             |
+| nome           |           | paciente_id (FK)    |
+| cpf (UNIQUE)   |           | nome                |
+| data_nascimento|           | cpf (UNIQUE)        |
+| idade          |           | grau_parentesco     |
+| cep            |           +---------------------+
+| logradouro     |
+| numero         |
+| bairro         |
+| cidade         |
+| uf             |
++----------------+
+        |
+        | 1
+        |    
+        | N
++---------------------+
+|   Agendamentos      |
++---------------------+
+| id (PK)             |
+| paciente_id (FK)    |
+| nome_medico         |
+| especialidade       |
+| data_hora           |
+| status              | <- agendado, cancelado, realizado
++---------------------+
+
++---------------------+
+|   LogIntegracao     |
++---------------------+
+| id (PK)             |
+| endpoint            |
+| metodo              |
+| payload             |
+| resposta            |
+| status_http         |
+| erro (nullable)     |
+| criado_em           |
++---------------------+
+```
