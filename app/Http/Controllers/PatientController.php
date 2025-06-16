@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Contracts\PatientServiceInterface;
+use App\Application\Interfaces\PatientServiceInterface;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\View\View;

@@ -6,7 +6,7 @@
             </h2>
             <a href="{{ route('patients.index') }}">
                 <x-button>
-                    Voltar
+                    {{ __('Back') }}
                 </x-button>
             </a>
         </div>
@@ -16,7 +16,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if($errors->any())
                 <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
-                    <p class="font-bold">Erro ao cadastrar paciente:</p>
+                    <p class="font-bold">{{ __('Error creating patient') }}</p>
                     <ul>
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -31,67 +31,67 @@
                         @csrf
                         
                         <div class="mb-6">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Dados do Paciente</h3>
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{{ __('Patient Information') }}</h3>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome Completo</label>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Full Name') }}</label>
                                     <input type="text" name="name" id="name" value="{{ old('name') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" required>
                                 </div>
                                 
                                 <div>
-                                    <label for="cpf" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CPF (apenas números)</label>
+                                    <label for="cpf" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('CPF') }}</label>
                                     <input type="text" name="cpf" id="cpf" data-mask="000.000.000-00" value="{{ old('cpf') }}" class="cpf w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm"  required>
                                 </div>
                                 
                                 <div>
-                                    <label for="birth_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data de Nascimento</label>
+                                    <label for="birth_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Birth Date') }}</label>
                                     <input type="date" name="birth_date" id="birth_date" value="{{ old('birth_date') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" required>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="mb-6">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Endereço</h3>
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{{ __('Address') }}</h3>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                                 <div>
-                                    <label for="zip_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CEP (apenas números)</label>
+                                    <label for="zip_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Zip Code') }}</label>
                                     <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code') }}" class="zip_code w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" maxlength="8" required>
                                 </div>
                             </div>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="street" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rua</label>
+                                    <label for="street" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Street') }}</label>
                                     <input type="text" name="street" id="street" value="{{ old('street') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" required>
                                 </div>
                                 
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label for="number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Número</label>
+                                        <label for="number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Number') }}</label>
                                         <input type="text" name="number" id="number" value="{{ old('number') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" required>
                                     </div>
                                     
                                     <div>
-                                        <label for="complement" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Complemento</label>
+                                        <label for="complement" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Complement') }}</label>
                                         <input type="text" name="complement" id="complement" value="{{ old('complement') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm">
                                     </div>
                                 </div>
                                 
                                 <div>
-                                    <label for="neighborhood" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bairro</label>
+                                    <label for="neighborhood" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Neighborhood') }}</label>
                                     <input type="text" name="neighborhood" id="neighborhood" value="{{ old('neighborhood') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" required>
                                 </div>
                                 
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cidade</label>
+                                        <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('City') }}</label>
                                         <input type="text" name="city" id="city" value="{{ old('city') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" required>
                                     </div>
                                     
                                     <div>
-                                        <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">UF</label>
+                                        <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('State') }}</label>
                                         <input type="text" name="state" id="state" value="{{ old('state') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" maxlength="2" required>
                                     </div>
                                 </div>
@@ -99,25 +99,25 @@
                         </div>
                         
                         <div class="mb-6">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Responsáveis (2 obrigatórios)</h3>
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{{ __('Responsible') }} {{ __('(2 needed)') }}</h3>
                             
                             @for($i = 0; $i < 2; $i++)
                                 <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-md mb-4">
-                                    <h4 class="font-medium text-gray-900 dark:text-gray-100 mb-3">Responsável {{ $i + 1 }}</h4>
+                                    <h4 class="font-medium text-gray-900 dark:text-gray-100 mb-3">{{ __('Responsible') }} {{ $i + 1 }}</h4>
                                     
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <div>
-                                            <label for="responsible[{{ $i }}][name]" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome Completo</label>
+                                            <label for="responsible[{{ $i }}][name]" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Name') }}</label>
                                             <input type="text" name="responsible[{{ $i }}][name]" id="responsible[{{ $i }}][name]" value="{{ old('responsible.' . $i . '.name') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" required>
                                         </div>
                                         
                                         <div>
-                                            <label for="responsible[{{ $i }}][cpf]" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CPF (apenas números)</label>
+                                            <label for="responsible[{{ $i }}][cpf]" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('CPF') }}</label>
                                             <input type="text" name="responsible[{{ $i }}][cpf]" id="responsible[{{ $i }}][cpf]" value="{{ old('responsible.' . $i . '.cpf') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm cpf"  required>
                                         </div>
                                         
                                         <div>
-                                            <label for="responsible[{{ $i }}][relationship]" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Parentesco</label>
+                                            <label for="responsible[{{ $i }}][relationship]" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Relationship') }}</label>
                                             <input type="text" name="responsible[{{ $i }}][relationship]" id="responsible[{{ $i }}][relationship]" value="{{ old('responsible.' . $i . '.relationship') }}" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" required>
                                         </div>
                                     </div>
@@ -127,7 +127,7 @@
                         
                         <div class="flex justify-end">
                             <x-button type="submit">
-                                Cadastrar Paciente
+                                {{ __('Register Patient') }}
                             </x-button>
                         </div>
                     </form>

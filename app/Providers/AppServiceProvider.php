@@ -6,8 +6,8 @@ namespace App\Providers;
 
 use App\Application\Interfaces\DashboardServiceInterface;
 use App\Application\Services\DashboardService;
-use App\Contracts\AppointmentServiceInterface;
-use App\Contracts\PatientServiceInterface;
+use App\Application\Interfaces\AppointmentServiceInterface;
+use App\Application\Interfaces\PatientServiceInterface;
 use App\Services\AppointmentService;
 use App\Services\PatientService;
 use Illuminate\Support\ServiceProvider;

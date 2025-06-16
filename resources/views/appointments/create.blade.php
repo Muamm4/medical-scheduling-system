@@ -27,7 +27,7 @@
                         <div class="mb-6">
                             <label for="patient_id" class="block text-sm font-medium text-gray-700 dark:text-gray-100">Paciente</label>
                             <select id="patient_id" name="patient_id" class="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
-                                <option value="">Selecione um paciente</option>
+                                <option value="">{{ __('Selecione um paciente') }}</option>
                                 @foreach($patients as $patient)
                                     <option value="{{ $patient->id }}" {{ (old('patient_id') == $patient->id || (isset($selectedPatientId) && $selectedPatientId == $patient->id)) ? 'selected' : '' }}>
                                         {{ $patient->name }} ({{ \App\Helpers\FormatHelper::formatCpf($patient->cpf) }})
@@ -38,15 +38,15 @@
 
                         <!-- Seleção de Médico (será preenchido via AJAX) -->
                         <div class="mb-6" id="doctorSection" style="display: none;">
-                            <label for="doctor_id" class="block text-sm font-medium text-gray-700 dark:text-gray-100">Médico</label>
+                            <label for="doctor_id" class="block text-sm font-medium text-gray-700 dark:text-gray-100">{{ __('Doctor') }}</label>
                             <select id="doctor_id" name="doctor_id" class="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
-                                <option value="">Selecione um médico</option>
+                                <option value="">{{ __('Select a doctor') }}</option>
                             </select>
                         </div>
 
                         <!-- Seção de Disponibilidade -->
                         <div id="availability-section" class="mb-4" style="display: none;">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Datas e Horários Disponíveis</h3>
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{{ __('Availability') }}</h3>
                             <div id="availability-table-container" class="overflow-x-auto">
                                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead class="bg-gray-50 dark:bg-gray-800">
@@ -68,17 +68,17 @@
 
                         <!-- Observações -->
                         <div class="mb-6" id="notesSection" style="display: none;">
-                            <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-100">Observações</label>
+                            <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-100">{{ __('Notes') }}</label>
                             <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('notes') }}</textarea>
                         </div>
 
                         <!-- Botões -->
                         <div class="flex items-center justify-end mt-4">
                             <a href="{{ route('appointments.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 dark:bg-gray-700 border border-transparent rounded-md font-semibold text-xs text-gray-800 dark:text-gray-100 uppercase tracking-widest hover:bg-gray-400 dark:hover:bg-gray-600 active:bg-gray-500 focus:outline-none focus:border-gray-500 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 mr-2">
-                                Cancelar
+                                {{ __('Cancel') }}
                             </a>
                             <button type="submit" id="submitButton" class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 dark:hover:bg-blue-600 active:bg-blue-800 dark:active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150" style="display: none;">
-                                Agendar
+                                {{ __('Schedule') }}
                             </button>
                         </div>
                     </form>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Contracts\PatientServiceInterface;
+use App\Application\Interfaces\PatientServiceInterface;
 use App\Helpers\FormatHelper;
 use App\Models\Patient;
 use App\Models\Responsible;

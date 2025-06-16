@@ -20,7 +20,7 @@
                             </div>
                             <div class="ml-4">
                                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">{{ $stats['total_patients'] ?? 0 }}</h2>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">Total Patients</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">{{ __('Total Patients') }}</p>
                             </div>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                             </div>
                             <div class="ml-4">
                                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">{{ $stats['total_appointments'] ?? 0 }}</h2>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">Total Appointments</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">{{ __('Total Appointments') }}</p>
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                             </div>
                             <div class="ml-4">
                                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">{{ $stats['scheduled_appointments'] ?? 0 }}</h2>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">Scheduled</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">{{ __('Scheduled Appointments') }}</p>
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                             </div>
                             <div class="ml-4">
                                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">{{ $stats['completed_appointments'] ?? 0 }}</h2>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">Completed</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">{{ __('Completed Appointments') }}</p>
                             </div>
                         </div>
                     </div>
@@ -81,18 +81,18 @@
             <!-- Recent Appointments -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Recent Appointments</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ __('Recent Appointments') }}</h3>
                     
                     @if(isset($stats['recent_appointments']) && count($stats['recent_appointments']) > 0)
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead>
                                     <tr>
-                                        <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Patient</th>
-                                        <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Doctor</th>
-                                        <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Specialty</th>
-                                        <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date & Time</th>
-                                        <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('Patient') }}</th>
+                                        <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('Doctor') }}</th>
+                                        <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('Specialty') }}</th>
+                                        <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('Date & Time') }}</th>
+                                        <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('Status') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -113,7 +113,7 @@
                             </table>
                         </div>
                     @else
-                        <p class="text-gray-500 dark:text-gray-400">No upcoming appointments.</p>
+                        <p class="text-gray-500 dark:text-gray-400">{{ __('No upcoming appointments.') }}</p>
                     @endif
                 </div>
             </div>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Contracts\AppointmentServiceInterface;
+use App\Application\Interfaces\AppointmentServiceInterface;
 use App\Enums\AppointmentStatus;
 use App\Models\Appointment;
 use App\Models\IntegrationLog;
