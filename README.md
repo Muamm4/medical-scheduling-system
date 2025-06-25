@@ -41,10 +41,23 @@ cd medical-scheduling-system
 cp .env.example .env
 ```
 
-### 3. Inicie os Containers Docker
+### 3. Instale as dependências do Composer
 
 ```bash
-docker-compose up --build -d
+composer install
+```
+
+### 4. Instale as dependências do npm e compile os assets
+
+```bash
+npm install
+npm run build
+```
+
+### 5. Inicie os Containers Docker
+
+```bash
+docker compose up --build -d
 ```
 
 Este comando iniciará os seguintes serviços:
@@ -52,40 +65,46 @@ Este comando iniciará os seguintes serviços:
 - **db**: Servidor MySQL (porta 3310)
 - **mockapi**: API mock de médicos usando json-server (porta 3000)
 
+### 6. Execute as Migrações e Seeders
+
+```bash
+docker compose exec app php artisan migrate
+```
+
+### 7. Acesse o Sistema
+
+Acesse o sistema em http://localhost:8000
+
 ### Mock de médicos via Docker
 
 O serviço mockapi roda o json-server em um container Docker, expondo a API de médicos em http://localhost:3000. Os dados estão no arquivo `resources/mocks/doctors.json`. Ao alterar esse arquivo, o mock é atualizado automaticamente.
 
 **Atenção:** Todas as cidades dos médicos cadastrados são apenas "Vitória" ou "Vila Velha".
 
-### 4. Acesse o Sistema
-
-O sistema estará disponível em [http://localhost:8000](http://localhost:8000)
-
 ## Comandos Docker Úteis
 
 ### Visualizar Logs
 
 ```bash
-docker-compose logs -f
+docker compose logs -f
 ```
 
 ### Acessar o Terminal do Container
 
 ```bash
-docker-compose exec app sh
+docker compose exec app sh
 ```
 
 ### Parar os Containers
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ### Reconstruir os Containers (após alterações no Dockerfile)
 
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 ## Estrutura do Projeto
@@ -101,6 +120,10 @@ O projeto segue a arquitetura MVC do Laravel com algumas adaptações para segui
 ## Configuração do json-server
 
 O projeto utiliza json-server para simular uma API REST durante o desenvolvimento, especialmente para os dados de médicos.
+
+Ela roda em um container Docker, expondo a API de médicos em http://localhost:3000. Os dados estão no arquivo `resources/mocks/doctors.json`. Ao alterar esse arquivo, o mock é atualizado automaticamente.
+
+Caso queira iniciar o mock sem o docker, siga os comandos abaixo:
 
 ### Instalação do json-server
 

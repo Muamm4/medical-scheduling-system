@@ -14,7 +14,8 @@ RUN apk add --no-cache \
     libwebp-dev \
     freetype-dev \
     icu-dev \
-    npm
+    npm \
+    nodejs
 
 # Instale as extensões PHP necessárias para Laravel
 RUN docker-php-ext-install pdo_mysql bcmath exif pcntl gd intl opcache
@@ -28,22 +29,9 @@ WORKDIR /var/www/html
 # Copie a aplicação Laravel
 COPY . .
 
-# Instale as dependências do Composer
-RUN composer install --no-dev --optimize-autoloader
-
 # Permissões de arquivo para o Laravel
-RUN chown -R www-data:www-data storage bootstrap/cache
-RUN chmod -R 775 storage bootstrap/cache
-
-RUN composer install
-
-RUN php artisan key:generate
-
-RUN php artisan migrate --seed
-
-RUN npm install
-
-RUN npm run build
+RUN chown -R www-data:www-data storage bootstrap/cache public/build
+RUN chmod -R 775 storage bootstrap/cache public/build
 
 # Exponha a porta onde o servidor PHP embutido irá rodar
 EXPOSE 8000
